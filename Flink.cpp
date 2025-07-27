@@ -74,15 +74,15 @@ int wmain()
 
 	if(CopyToClipboard(textToCopy))
 	{
-		std::wcout << L"Текст скопирован в буфер обмена: " << textToCopy << std::endl;
+		//std::wcout << L"Текст скопирован в буфер обмена: " << textToCopy << std::endl;
+		return 0;
 	}
 	else
 	{
-		std::wcerr << L"Ошибка при открытии буфера обмена" << std::endl;
+		std::wcerr << L"Ошибка при открытии буфера обмена!" << std::endl;
+		// system("pause");
+		std::wcout << L"Нажмите любую клавишу для выхода...";
+		_getwch();
+		return 1;
 	}
-
-	// system("pause");
-	std::wcout << L"Нажмите любую клавишу для выхода...";
-	_getwch();
-	return 0;
 }
