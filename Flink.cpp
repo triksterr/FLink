@@ -66,6 +66,7 @@ int wmain()
 	if(textToCopy.empty())
 	{
 		std::wcerr << L"Использование: " << GetCommandLineArgs() << L" <текст_для_копирования>" << std::endl;
+		// system("pause");
 		std::wcerr << L"Нажмите любую клавишу для выхода...";
 		_getwch();
 		return 1;
@@ -80,6 +81,7 @@ int wmain()
 		std::wcerr << L"Ошибка при открытии буфера обмена" << std::endl;
 	}
 
+	// system("pause");
 	std::wcout << L"Нажмите любую клавишу для выхода...";
 	_getwch();
 	return 0;
