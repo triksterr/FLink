@@ -24,6 +24,7 @@ std::wstring GetCommandLineArgs()
 		result += argv[i];
 	}
 	result = L"file:\/\/" + result;
+	if(argc > 2) result = L"\"" + result + L"\""; // Если есть пробелы
 
 	LocalFree(argv);
 	return result;
@@ -70,7 +71,7 @@ int wmain()
 	if(textToCopy.empty())
 	{
 		//std::wcerr << L"Использование: " << GetCommandLineArgs() << L" <текст_для_копирования>" << std::endl;
-		std::wcerr << L"Using: " << GetCommandLineArgs() << L" <text_to_copy>" << std::endl;
+		std::wcerr << L"Using: " << GetCommandLineArgs() << L" <File or folder path>" << std::endl;
 		// system("pause");
 		//std::wcerr << L"Нажмите любую клавишу для выхода...";
 		std::wcerr << L"Press any key to exit...";
