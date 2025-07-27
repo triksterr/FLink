@@ -5,6 +5,11 @@
 #include <vector>
 #include <locale>
 
+// Функция для определения наличия пробелов в строке
+bool hasSpaces(const std::wstring &str)
+{
+	return str.find(L' ') != std::wstring::npos;
+}
 
 // Функция для получения всех аргументов командной строки как единой строки
 std::wstring GetCommandLineArgs()
@@ -20,8 +25,10 @@ std::wstring GetCommandLineArgs()
 		if(i > 1) result += L" ";
 		result += argv[i];
 	}
-	result = L"file:\/\/" + result;
-	if(argc > 2) result = L"\"" + result + L"\""; // Если есть пробелы
+	result = L"file:\/\/" + result; // Добавляем префикс ссылки
+
+	if(hasSpaces(result)) // Если есть пробелы
+		result = L"\"" + result + L"\"";
 
 	LocalFree(argv);
 	return result;
