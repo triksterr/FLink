@@ -65,9 +65,11 @@ int wmain()
 
 	if(textToCopy.empty())
 	{
-		std::wcerr << L"Использование: " << GetCommandLineArgs() << L" <текст_для_копирования>" << std::endl;
+		//std::wcerr << L"Использование: " << GetCommandLineArgs() << L" <текст_для_копирования>" << std::endl;
+		std::wcerr << L"Using: " << GetCommandLineArgs() << L" <text_to_copy>" << std::endl;
 		// system("pause");
-		std::wcerr << L"Нажмите любую клавишу для выхода...";
+		//std::wcerr << L"Нажмите любую клавишу для выхода...";
+		std::wcerr << L"Press any key to exit...";
 		_getwch();
 		return 1;
 	}
@@ -79,9 +81,11 @@ int wmain()
 	}
 	else
 	{
-		std::wcerr << L"Ошибка при открытии буфера обмена!" << std::endl;
+		//std::wcerr << L"Ошибка при открытии буфера обмена!" << std::endl;
+		std::wcerr << L"Clipboard open error!" << std::endl;
 		// system("pause");
-		std::wcout << L"Нажмите любую клавишу для выхода...";
+		//std::wcout << L"Нажмите любую клавишу для выхода...";
+		std::wcerr << L"Press any key to exit...";
 		_getwch();
 		return 1;
 	}
