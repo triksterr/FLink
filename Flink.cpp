@@ -5,7 +5,7 @@
 #include <vector>
 #include <locale>
 
-// TODO: Если возникли ошибки и не указан ключ -v то ничего не делаем и выходим
+bool verbose = false; // Флаг для включения режима вывода сообщений
 
 // Функция для определения наличия пробелов в строке
 bool hasSpaces(const std::wstring &str)
@@ -17,18 +17,24 @@ bool hasSpaces(const std::wstring &str)
 std::wstring GetCommandLineArgs()
 {
 	int argc;
-	wchar_t **argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+
+	LPWSTR *argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+
+	if(!argv) 
+		return L"";
 
 	if(argc < 2) 
 		return L"";
 
-	if(argv[1] == L"-v") //! Если ключ -v, то ставим флаг и начинаем с 2-го аргумента
-		;
+	if(wcscmp(argv[1], L"-v") == 0 || wcscmp(argv[1], L"/v") == 0 ||  wcscmp(argv[1], L"-V") == 0 || wcscmp(argv[1], L"/V") == 0) // Если ключ -v, то ставим флаг и начинаем с 2-го аргумента
+		verbose = true;
 
 	std::wstring result;
-	for(int i = 1; i < argc; i++)
+
+	for(int i = (verbose ? 2 : 1); i < argc; i++)
 	{
-		if(i > 1) result += L" ";
+		if(i > (verbose ? 2 : 1))
+			result += L" ";
 		result += argv[i];
 	}
 	result = L"file:\/\/" + result; // Добавляем префикс ссылки
@@ -78,25 +84,23 @@ int wmain()
 	// Получаем аргументы командной строки
 	std::wstring textToCopy = GetCommandLineArgs();
 
-	bool verbose = false; // Флаг для включения режима вывода сообщений
-	if(textToCopy.find(L" -v ") != std::wstring::npos) //! наверное лучше сразу читать первый аргумент, сравнивать и если не ключ, собирать начиная с 1, а иначе - со второго
-	{ 
-		//verbose = true;
-		//textToCopy.erase(textToCopy.find(L" -v "), 2); // Удаляем ключ
+	if(verbose)
+	{
+		//std::wcout << L"Программа Flink v.2.4 (C)RUbasic от 30.07.2025 генерирует файловые ссылки" << std::endl;
+		std::wcout << L"Program Flink v.2.4 (C)RUbasic generates file links" << std::endl;
 	}
 
 	if(textToCopy.empty())
 	{
 		if(verbose)
 		{
-		//std::wcerr << L"Использование: " << GetCommandLineArgs() << L" <текст_для_копирования>" << std::endl;
-		 std::wcerr << L"Using: " << GetCommandLineArgs() << L" <File or folder path>" << std::endl;
-		//system("pause");
-		//std::wcerr << L"Нажмите любую клавишу для выхода...";
-		 std::wcerr << L"Press any key to exit...";
-		_getwch();
+			//std::wcerr << L"Использование: " << GetCommandLineArgs() << L" <текст_для_копирования>" << std::endl;
+			 std::wcerr << L"Using: " << GetCommandLineArgs() << L" <File or folder path>" << std::endl;
+			//system("pause");
+			//std::wcerr << L"Нажмите любую клавишу для выхода...";
+			 std::wcerr << L"Press any key to exit...";
+			_getwch();
 		}
-
 		return 1;
 	}
 
@@ -104,7 +108,8 @@ int wmain()
 	{
 		if(verbose)
 		{
-			std::wcout << L"Текст скопирован в буфер обмена: " << textToCopy << std::endl;
+			//std::wcout << L"Файловая ссылка скопирована в буфер обмена: " << textToCopy << std::endl;
+			std::wcout << L"File link copied to clipboard: " << textToCopy << std::endl;
 		}
 		return 0;
 	}
@@ -112,12 +117,12 @@ int wmain()
 	{
 		if(verbose)
 		{
-			//std::wcerr << L"Ошибка при открытии буфера обмена!" << std::endl;
-		std::wcerr << L"Clipboard open error!" << std::endl;
-		// system("pause");
-		//std::wcout << L"Нажмите любую клавишу для выхода...";
-		std::wcerr << L"Press any key to exit...";
-		_getwch();
+			//std::wcerr << L"Ошибка при доступе к буферу обмена!" << std::endl;
+			std::wcerr << L"Clipboard access error!" << std::endl;
+			// system("pause");
+			//std::wcout << L"Нажмите любую клавишу для выхода...";
+			std::wcerr << L"Press any key to exit...";
+			_getwch();
 		}
 		return 1;
 	}
