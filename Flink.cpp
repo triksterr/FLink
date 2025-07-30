@@ -5,6 +5,8 @@
 #include <vector>
 #include <locale>
 
+// TODO: Если возникли ошибки и не указан ключ -v то ничего не делаем и выходим
+
 // Функция для определения наличия пробелов в строке
 bool hasSpaces(const std::wstring &str)
 {
@@ -17,7 +19,11 @@ std::wstring GetCommandLineArgs()
 	int argc;
 	wchar_t **argv = CommandLineToArgvW(GetCommandLineW(), &argc);
 
-	if(argc < 2) return L"";
+	if(argc < 2) 
+		return L"";
+
+	if(argv[1] == L"-v") //! Если ключ -v, то ставим флаг и начинаем с 2-го аргумента
+		;
 
 	std::wstring result;
 	for(int i = 1; i < argc; i++)
@@ -72,30 +78,47 @@ int wmain()
 	// Получаем аргументы командной строки
 	std::wstring textToCopy = GetCommandLineArgs();
 
+	bool verbose = false; // Флаг для включения режима вывода сообщений
+	if(textToCopy.find(L" -v ") != std::wstring::npos) //! наверное лучше сразу читать первый аргумент, сравнивать и если не ключ, собирать начиная с 1, а иначе - со второго
+	{ 
+		//verbose = true;
+		//textToCopy.erase(textToCopy.find(L" -v "), 2); // Удаляем ключ
+	}
+
 	if(textToCopy.empty())
 	{
+		if(verbose)
+		{
 		//std::wcerr << L"Использование: " << GetCommandLineArgs() << L" <текст_для_копирования>" << std::endl;
-		std::wcerr << L"Using: " << GetCommandLineArgs() << L" <File or folder path>" << std::endl;
-		// system("pause");
+		 std::wcerr << L"Using: " << GetCommandLineArgs() << L" <File or folder path>" << std::endl;
+		//system("pause");
 		//std::wcerr << L"Нажмите любую клавишу для выхода...";
-		std::wcerr << L"Press any key to exit...";
+		 std::wcerr << L"Press any key to exit...";
 		_getwch();
+		}
+
 		return 1;
 	}
 
 	if(CopyToClipboard(textToCopy))
 	{
-		//std::wcout << L"Текст скопирован в буфер обмена: " << textToCopy << std::endl;
+		if(verbose)
+		{
+			std::wcout << L"Текст скопирован в буфер обмена: " << textToCopy << std::endl;
+		}
 		return 0;
 	}
 	else
 	{
-		//std::wcerr << L"Ошибка при открытии буфера обмена!" << std::endl;
+		if(verbose)
+		{
+			//std::wcerr << L"Ошибка при открытии буфера обмена!" << std::endl;
 		std::wcerr << L"Clipboard open error!" << std::endl;
 		// system("pause");
 		//std::wcout << L"Нажмите любую клавишу для выхода...";
 		std::wcerr << L"Press any key to exit...";
 		_getwch();
+		}
 		return 1;
 	}
 }
